@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Placement Portal - Login</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="auth">
+  <div class="hero"><h1>🎓 Placement Portal</h1><p class="muted">College Placement Management System</p></div>
+
+  <div class="card">
+    <div class="tabs" id="authTabs">
+      <button class="active" data-mode="login">Login</button>
+      <button data-mode="register">Student Register</button>
+    </div>
+
+    <form id="loginForm">
+      <label>Email</label><input type="email" name="email" required autocomplete="username">
+      <label>Password</label><input type="password" name="password" required autocomplete="current-password">
+      <button class="btn" type="submit">Login</button>
+    </form>
+
+    <form id="registerForm" class="hidden">
+      <div class="form-grid">
+        <div><label>Full name</label><input name="name" required></div>
+        <div><label>Email</label><input type="email" name="email" required></div>
+        <div><label>Password (min 6)</label><input type="password" name="password" minlength="6" required></div>
+        <div><label>Roll number</label><input name="roll_no" required></div>
+        <div><label>Department</label>
+          <select name="department" required>
+            <option>Information Technology</option><option>Computer Science</option>
+            <option>Electronics</option><option>Mechanical</option><option>Civil</option><option>Management</option>
+          </select></div>
+        <div><label>CGPA (0-10)</label><input type="number" name="cgpa" step="0.01" min="0" max="10" required></div>
+        <div><label>Active backlogs</label><input type="number" name="backlogs" min="0" value="0" required></div>
+        <div><label>Graduation year</label><input type="number" name="graduation_year" min="2000" max="2100" value="2027" required></div>
+        <div><label>Phone</label><input name="phone"></div>
+      </div>
+      <button class="btn" type="submit">Create account</button>
+    </form>
+  </div>
+</div>
+
+<script src="assets/js/common.js"></script>
+<script>
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+
+document.querySelectorAll('#authTabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#authTabs button').forEach(x => x.classList.toggle('active', x === b));
+  loginForm.classList.toggle('hidden', b.dataset.mode !== 'login');
+  registerForm.classList.toggle('hidden', b.dataset.mode !== 'register');
+}));
+
+const formData = f => Object.fromEntries(new FormData(f));
+
+loginForm.addEventListener('submit', safe(async e => {
+  e.preventDefault();
+  const { user } = await api('auth', 'login', formData(loginForm));
+  location.href = user.role === 'admin' ? 'admin.html' : 'student.html';
+}));
+
+registerForm.addEventListener('submit', safe(async e => {
+  e.preventDefault();
+  const r = await api('auth', 'register', formData(registerForm));
+  toast(r.message);
+  registerForm.reset();
+  document.querySelector('#authTabs [data-mode=login]').click();
+}));
+
+// Already logged in? jump to dashboard
+api('auth', 'me').then(({ user }) => {
+  if (user) location.href = user.role === 'admin' ? 'admin.html' : 'student.html';
+}).catch(() => {});
+</script>
+</body>
+</html>

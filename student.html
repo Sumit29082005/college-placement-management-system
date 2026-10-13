@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="topbar"><h1>🎓 Student Dashboard</h1><div><span id="who"></span> <button onclick="logout()">Logout</button></div></header>
+<main class="container">
+  <nav class="tabs">
+    <button class="active" data-tab="drives">Placement Drives</button>
+    <button data-tab="applications">My Applications</button>
+    <button data-tab="profile">My Profile</button>
+  </nav>
+
+  <section id="tab-drives" class="tab"><div id="drives" class="grid"></div></section>
+
+  <section id="tab-applications" class="tab hidden">
+    <div class="card table-wrap">
+      <table><thead><tr><th>Company</th><th>Role</th><th>Package</th><th>Drive date</th><th>Applied</th><th>Status</th></tr></thead>
+      <tbody id="appsBody"></tbody></table>
+    </div>
+  </section>
+
+  <section id="tab-profile" class="tab hidden">
+    <div class="card" id="profileInfo"></div>
+    <form class="card" id="profileForm">
+      <h2>Update details</h2>
+      <label>Phone</label><input name="phone">
+      <label>Skills (comma separated)</label><input name="skills">
+      <label>Resume link (Drive / GitHub / portfolio URL)</label><input name="resume_link" type="url">
+      <button class="btn" type="submit">Save</button>
+      <p class="muted">CGPA, backlogs and department can only be changed by the placement cell.</p>
+    </form>
+  </section>
+</main>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/student.js"></script>
+</body>
+</html>
